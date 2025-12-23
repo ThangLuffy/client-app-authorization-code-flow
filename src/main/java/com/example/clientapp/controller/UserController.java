@@ -18,7 +18,6 @@ public class UserController {
     @Autowired
     private WebClient webClient;
 
-//        TODO customize view of home page, login page
     @GetMapping("/users")
     public String findUsers(Model model) {
         Users[] users = webClient.get()
