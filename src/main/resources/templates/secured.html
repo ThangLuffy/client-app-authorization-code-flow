@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập thành công</title>
@@ -60,13 +60,12 @@
 <body>
 
 <div class="header-actions">
-    <a th:href="@{/}">
+    <a th:href="@{/secured}">
         <div>
             <img src="https://spos.vnpay.vn/Portals/_default/Skins/Assets/images/logo-primary.svg" alt="LOGO VNPAY"
                  style="width: 300px; height: 80px;">
         </div>
     </a>
-
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="btn btn-logout"> Đăng xuất</button>
     </form>
@@ -74,12 +73,17 @@
 
 <div class="container">
     <div class="content">
-
         <h2>Đăng nhập thành công</h2>
         <div class="info">
-            <p>Xin chào, <strong th:text="${username}">user</strong></p>
+            <p>Xin chào, <strong sec:authentication="name">user</strong></p>
             <p>Bạn đã đăng nhập thành công qua hệ thống VNPAY SSO.</p>
         </div>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <h2>Tích hợp luồng từ client app đến resource server</h2>
+        <form th:action="@{/users}" method="get">
+            <button>Kiểm tra</button>
+        </form>
     </div>
 </div>
 

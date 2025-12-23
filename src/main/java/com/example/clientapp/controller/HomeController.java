@@ -2,7 +2,6 @@ package com.example.clientapp.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +19,8 @@ public class HomeController {
     }
 
     @GetMapping("/secured")
-    public String getUserName(Model model, Authentication authentication) {
-        model.addAttribute("username", authentication.getName());
+    public String loginSuccess(Model model, Authentication authentication) {
+        model.addAttribute("name", authentication.getName());
         return "secured";
     }
 
