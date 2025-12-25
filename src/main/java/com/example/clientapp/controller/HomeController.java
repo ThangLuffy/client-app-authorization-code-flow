@@ -19,7 +19,6 @@ public class HomeController {
     @GetMapping("/login")
     public String login(HttpSession session, Model model) {
         Object error = session.getAttribute(OidcAuthenticationFailureHandler.LOGIN_ERROR_ATTR);
-
         if (error != null) {
             model.addAttribute("errorMessage", error);
             session.removeAttribute(OidcAuthenticationFailureHandler.LOGIN_ERROR_ATTR);

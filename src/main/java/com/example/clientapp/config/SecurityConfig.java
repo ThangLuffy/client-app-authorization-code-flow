@@ -23,16 +23,14 @@ public class SecurityConfig {
             "/webjars/**"};
 
     private final KeyCloakLogoutHandler keycloakLogoutHandler;
-    private final OidcAuthenticationFailureHandler authenticationFailureHandler;
 
-    public SecurityConfig(KeyCloakLogoutHandler keycloakLogoutHandler, OidcAuthenticationFailureHandler authenticationFailureHandler) {
+    public SecurityConfig(KeyCloakLogoutHandler keycloakLogoutHandler) {
         this.keycloakLogoutHandler = keycloakLogoutHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
-//  TODO need review
+    //  TODO need review
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, OidcAuthenticationFailureHandler authenticationFailureHandler) throws Exception {
 
         http
                 .csrf(csrf -> csrf
@@ -42,11 +40,9 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(withDefaults())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .defaultSuccessUrl("/secured", true)
-                        .failureUrl("/login?error=true")
                         .failureHandler(authenticationFailureHandler)
                 )
                 .logout(logout -> logout
@@ -55,7 +51,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .logoutSuccessUrl("/login?logout=true")
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
