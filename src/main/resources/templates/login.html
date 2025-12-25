@@ -102,10 +102,9 @@
 
             <h2>ĐĂNG NHẬP</h2>
 
-            <!-- lỗi login -->
-            <!--            <div class="error" th:if="${param.error}">-->
-            <!--                Đăng nhập không thành công-->
-            <!--            </div>-->
+            <div th:if="${errorMessage}" style="color:red">
+                <p th:text="${errorMessage}"></p>
+            </div>
 
             <a th:href="@{/oauth2/authorization/keycloak}">
                 <button class="login-btn">
@@ -114,7 +113,7 @@
             </a>
 
             <div class="footer">
-                © 2025 ID SAFE VNPAY SSO PKCE FLOW
+                © 2025 ID SAFE VNPAY SSO AUTH CODE FLOW
             </div>
         </div>
     </div>

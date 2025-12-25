@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ClientAppApplication {
+public class ConfidentialClientApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(ClientAppApplication.class, args);
+		SpringApplication.run(ConfidentialClientApplication.class, args);
 	}
 }

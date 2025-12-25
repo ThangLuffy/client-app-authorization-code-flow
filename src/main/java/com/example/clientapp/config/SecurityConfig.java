@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -12,27 +13,41 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final KeyCloakLogoutHandler keycloakLogoutHandler;
+    public static final String[] PUBLIC_URLS = {
+            "/",
+            "/home",
+            "/login",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/webjars/**"};
 
-    public SecurityConfig(KeyCloakLogoutHandler keycloakLogoutHandler) {
+    private final KeyCloakLogoutHandler keycloakLogoutHandler;
+    private final OidcAuthenticationFailureHandler authenticationFailureHandler;
+
+    public SecurityConfig(KeyCloakLogoutHandler keycloakLogoutHandler, OidcAuthenticationFailureHandler authenticationFailureHandler) {
         this.keycloakLogoutHandler = keycloakLogoutHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
+//  TODO need review
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-             http
+
+        http
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/logout")
                 )
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/home", "/login", "/img/**", "/static/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2Client(withDefaults())
+                .oauth2Login(withDefaults())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .defaultSuccessUrl("/secured", true)
                         .failureUrl("/login?error=true")
+                        .failureHandler(authenticationFailureHandler)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -41,10 +56,9 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .logoutSuccessUrl("/login?logout=true")
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
-
-
         return http.build();
     }
 }

@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/users")
     public String findUsers(Model model) {
         Users[] users = webClient.get()
-                .uri("http://localhost:8085/api/users")
+                .uri("http://localhost:8086/api/users")
                 .retrieve()
                 .bodyToMono(Users[].class)
                 .block();

@@ -2,7 +2,6 @@ package com.example.clientapp.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +22,9 @@ public class KeyCloakLogoutHandler implements LogoutHandler {
     }
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response,
-                       Authentication auth) {
-        // Handle logout from Keycloak
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication auth) {
+        logger.info("Authentication in class logout '{}'", auth);
         if (auth != null && auth.getPrincipal() instanceof OidcUser) {
-            logger.info("Inside logout");
             logoutFromKeycloak((OidcUser) auth.getPrincipal());
         }
     }
@@ -40,6 +37,7 @@ public class KeyCloakLogoutHandler implements LogoutHandler {
 
         ResponseEntity<String> logoutResponse = restTemplate.getForEntity(
                 builder.toUriString(), String.class);
+
         if (logoutResponse.getStatusCode().is2xxSuccessful()) {
             logger.info("Successfully logged out from Keycloak");
         } else {
